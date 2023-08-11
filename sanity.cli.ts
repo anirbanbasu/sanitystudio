@@ -7,7 +7,7 @@ import {
 
 export default defineCliConfig({
   api: {
-    projectId,//: 'l7tokq15',
-    dataset,//: 'production'
+    projectId,
+    dataset,
   }
 })

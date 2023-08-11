@@ -1,8 +1,9 @@
-import { defineField, defineType } from 'sanity'
+import { defineType } from 'sanity'
+import { media } from 'sanity-plugin-media'
 
 export default defineType({
   name: 'photograph',
-  title: 'Photograph',
+  title: 'Photographs',
   type: 'document',
   fields: [
     {
@@ -53,6 +54,14 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'parsedExifData',
+      title: 'Parsed EXIF data',
+      type: 'string',
+      description: 'This is the EXIF data parsed from the uploaded image.',
+      readOnly: true,
+      // initialValue: //Use GROQ query? or the media plugin?
+    },
+    {
       name: 'c2paExternalManifest',
       title: 'C2PA external manifest',
       type: 'file',
@@ -63,11 +72,15 @@ export default defineType({
       name: 'tags',
       title: 'Tags',
       type: 'array',
-      description: 'Optional tags: a maximum of 64 tags is supported.',
       of: [{ type: 'string'}],
+      options: {
+        layout: 'tags',
+      },
+      description: 'Optional tags: a maximum of 64 tags is supported.',
       validation: [
         (Rule) => Rule.max(64),
         (Rule) => Rule.min(0),
+        (Rule) => Rule.unique(),
       ]
     },
   ],

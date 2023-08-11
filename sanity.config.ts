@@ -1,6 +1,7 @@
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
 import {visionTool} from '@sanity/vision'
+import {media, mediaAssetSource} from 'sanity-plugin-media'
 
 // see https://www.sanity.io/docs/api-versioning for how versioning works
 import {
@@ -14,10 +15,18 @@ export default defineConfig({
   name: 'anirbanbasu--visualarts',
   title: 'Visual Arts @anirbanbasu',
 
-  projectId,//: 'l7tokq15',
-  dataset,//: 'production',
+  projectId,
+  dataset,
 
-  plugins: [deskTool(), visionTool()],
+  plugins: [deskTool(), visionTool(), media()],
+  form: {
+    // Don't use this plugin when selecting files only (but allow all other enabled asset sources)
+    file: {
+      assetSources: previousAssetSources => {
+        return previousAssetSources.filter(assetSource => assetSource !== mediaAssetSource)
+      }
+    }
+  },
 
   schema: {
     types: schemaTypes,
