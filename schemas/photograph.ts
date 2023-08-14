@@ -92,7 +92,7 @@ export default defineType({
           },
         }),
         defineField({
-          name: 'apeture',
+          name: 'aperture',
           type: 'computedString',
           title: 'F number',
           description: 'F number (aperture)',
@@ -165,7 +165,7 @@ export default defineType({
       ],
       options: {
         collapsible: true,
-        collapsed: true,
+        collapsed: false,
       },
     },
     {
