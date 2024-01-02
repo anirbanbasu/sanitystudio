@@ -1,5 +1,4 @@
 import { defineField, defineType } from 'sanity'
-import { media } from 'sanity-plugin-media'
 
 export default defineType({
   name: 'photograph',

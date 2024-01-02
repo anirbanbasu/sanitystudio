@@ -1,6 +1,7 @@
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
 import {visionTool} from '@sanity/vision'
+import {presentationTool} from '@sanity/presentation'
 import {media, mediaAssetSource} from 'sanity-plugin-media'
 import {sanityComputedField} from 'sanity-plugin-computed-field'
 
@@ -12,6 +13,11 @@ import {
 
 import {schemaTypes} from './schemas'
 
+const SANITY_STUDIO_PREVIEW_URL = (
+	process.env.SANITY_STUDIO_PREVIEW_URL
+	|| 'http://localhost:3000'
+)
+
 export default defineConfig({
   name: 'anirbanbasu',
   title: '@anirbanbasu',
@@ -19,7 +25,7 @@ export default defineConfig({
   projectId,
   dataset,
 
-  plugins: [deskTool(), visionTool(), media(), sanityComputedField()],
+  plugins: [deskTool(), visionTool(), media(), presentationTool({previewUrl: SANITY_STUDIO_PREVIEW_URL}), sanityComputedField()],
   form: {
     // Don't use this plugin when selecting files only (but allow all other enabled asset sources)
     file: {
