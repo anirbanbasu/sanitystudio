@@ -13,8 +13,8 @@ import {
 import {schemaTypes} from './schemas'
 
 export default defineConfig({
-  name: 'anirbanbasu--visualarts',
-  title: 'Visual Arts @anirbanbasu',
+  name: 'anirbanbasu',
+  title: '@anirbanbasu',
 
   projectId,
   dataset,
