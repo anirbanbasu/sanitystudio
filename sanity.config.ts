@@ -1,9 +1,10 @@
 import {defineConfig} from 'sanity'
-import {deskTool} from 'sanity/desk'
+import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import { CgProfile } from "react-icons/cg";
 import {media, mediaAssetSource} from 'sanity-plugin-media'
 import {sanityComputedField} from 'sanity-plugin-computed-field'
+import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
 
 // see https://www.sanity.io/docs/api-versioning for how versioning works
 import {
@@ -21,7 +22,7 @@ export default defineConfig({
   projectId,
   dataset,
 
-  plugins: [deskTool(), visionTool(), media(), sanityComputedField()],
+  plugins: [structureTool(), visionTool(), media(), unsplashImageAsset(), sanityComputedField()],
   form: {
     // Don't use this plugin when selecting files only (but allow all other enabled asset sources)
     file: {
