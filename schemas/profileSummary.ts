@@ -4,11 +4,13 @@
 */
 
 import { defineType } from 'sanity'
+import { RiProfileLine } from "react-icons/ri";
 
 export default defineType({
     name: 'profileSummary',
     title: 'Researcher profile summary',
     type: 'document',
+    icon: RiProfileLine,
     preview: {
       select: {
           title: 'name',

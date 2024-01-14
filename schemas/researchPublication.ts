@@ -1,9 +1,11 @@
 import { defineType } from 'sanity'
+import { IoNewspaperOutline } from "react-icons/io5";
 
 export default defineType({
     name: 'researchPublication',
     title: 'Research publication',
     type: 'document',
+    icon: IoNewspaperOutline,
     fields: [
       {
         name: 'publicationType',

@@ -1,14 +1,25 @@
 import { defineField, defineType } from 'sanity'
+import { PiArticleLight } from "react-icons/pi";
+
 
 export default defineType({
   name: 'post',
   title: 'Posts',
   type: 'document',
+  icon: PiArticleLight,
+  preview: {
+    select: {
+      title: 'title',
+      subtitle: 'excerpt',
+      media: 'mainImage',
+    },
+  },
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
@@ -40,18 +51,11 @@ export default defineType({
     defineField({
       name: 'body',
       title: 'Body',
-      type: 'blockContent',
+      type: 'array',
+        of: [{ type: 'block'}],
+        validation: Rule => [
+            Rule.required().error('Body of the post is mandatory.'),
+        ],
     }),
   ],
-  preview: {
-    select: {
-      title: 'title',
-      author: 'author.name',
-      media: 'mainImage',
-    },
-    prepare(selection) {
-      const { author } = selection
-      return { ...selection, subtitle: author && `by ${author}` }
-    },
-  },
 })

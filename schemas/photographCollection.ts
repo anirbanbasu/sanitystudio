@@ -1,9 +1,19 @@
 import { defineType } from 'sanity'
+import { MdOutlinePhotoLibrary } from "react-icons/md";
+
+
 
 export default defineType({
   name: 'photographCollection',
   title: 'Photograph collections',
   type: 'document',
+  icon: MdOutlinePhotoLibrary,
+  preview: {
+    select: {
+        title: 'caption',
+        subtitle: 'description', // This is not a good idea because description is an array.
+    },
+  },
   fields: [
     {
       name: 'caption',

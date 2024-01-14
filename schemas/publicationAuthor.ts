@@ -1,26 +1,28 @@
 import { defineType } from "sanity";
+import { GiHumanTarget } from "react-icons/gi";
 
 export default defineType({
     name: 'publicationAuthor',
     title: 'Publication author',
     type: 'document',
+    icon: GiHumanTarget,
     description: 'An author of a publication.',
     preview: {
-        select: {
-            authorType: 'authorType',
-            familyName: 'familyName',
-            organisationName: 'organisationName',
-            givenNames: 'givenNames',
-            orcid: 'orcid',
-            image: 'imageRef.imageData.asset',                
-        },
-        prepare: ({ authorType, familyName, organisationName, givenNames, orcid, image }) => {
-            return {
-                title: authorType === 'Person' ? (typeof givenNames!=='undefined' ? `${familyName}, ${givenNames.join(' ')}` : `${familyName}`) : organisationName,
-                subtitle: authorType === 'Person' ? typeof orcid!=='undefined' ? `${authorType} (${orcid})` : `${authorType}` : authorType,
-                media: image,
-            }
-        },
+      select: {
+          authorType: 'authorType',
+          familyName: 'familyName',
+          organisationName: 'organisationName',
+          givenNames: 'givenNames',
+          orcid: 'orcid',
+          image: 'imageRef.imageData.asset',                
+      },
+      prepare: ({ authorType, familyName, organisationName, givenNames, orcid, image }) => {
+          return {
+              title: authorType === 'Person' ? (typeof givenNames!=='undefined' ? `${familyName}, ${givenNames.join(' ')}` : `${familyName}`) : organisationName,
+              subtitle: authorType === 'Person' ? typeof orcid!=='undefined' ? `${authorType} (${orcid})` : `${authorType}` : authorType,
+              media: image,
+          }
+      },
     },
     fields: [
       {

@@ -1,9 +1,12 @@
 import { defineField, defineType } from 'sanity'
+import { HiOutlinePhoto } from "react-icons/hi2";
+
 
 export default defineType({
   name: 'photograph',
   title: 'Photographs',
   type: 'document',
+  icon: HiOutlinePhoto,
   fields: [
     {
       name: 'caption',
