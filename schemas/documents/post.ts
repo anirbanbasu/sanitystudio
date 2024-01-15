@@ -13,12 +13,19 @@ export default defineType({
       subtitle: 'excerpt',
       media: 'mainImage',
     },
+    prepare({ title, subtitle, media }) {
+      return {
+        title: title[0].value,
+        subtitle,
+        media,
+      }
+    }
   },
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
-      type: 'string',
+      type: 'internationalizedArrayString',
       validation: (Rule) => Rule.required(),
     }),
     defineField({

@@ -15,8 +15,16 @@ export default defineType({
       select: {
           title: 'name',
           subtitle: 'tagLine',
-          media: 'profileImage.imageData.asset',                
+          media: 'profileImage.imageData.asset', 
+          language: 'language'               
       },
+      prepare({ title, subtitle, media, language }) {
+        return {
+          title,
+          subtitle: `[${language}] ${subtitle}`,
+          media,
+        }
+      }
     },
     fields: [
       {
@@ -68,5 +76,12 @@ export default defineType({
         description: 'A profile picture of the researcher.',
         validation: (Rule) => Rule.required().error('The profile picture of the researcher is mandatory.'),
       },
+      {
+        // should match 'languageField' plugin configuration setting, if customized
+        name: 'language',
+        type: 'string',
+        readOnly: true,
+        hidden: true,
+      }
     ],
   })
