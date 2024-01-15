@@ -18,7 +18,7 @@ import {
 import {schemaTypes} from './schemas'
 import { languageFilter } from '@sanity/language-filter';
 
-const internationalizedSchemaTypes = ['profileSummary']
+const internationalizedSchemaTypes = ['profileSummary', 'profile']
 
 export default defineConfig({
   name: 'anirbanbasu',
