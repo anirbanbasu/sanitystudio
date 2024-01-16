@@ -4,13 +4,14 @@
 */
 
 import { defineType } from 'sanity'
-import { RiProfileLine } from "react-icons/ri";
+import { BsPersonVcard } from "react-icons/bs";
+
 
 export default defineType({
     name: 'profile',
-    title: 'Profile of a researcher',
+    title: 'Profile',
     type: 'document',
-    icon: RiProfileLine,
+    icon: BsPersonVcard,
     preview: {
       select: {
           name: 'name',
@@ -54,6 +55,29 @@ export default defineType({
         ],
       },
       {
+        name: 'skills',
+        title: 'Top skills',
+        description: 'An optional ordered list of top skills (not natural languages).',
+        type: 'array',
+        of: [{ type: 'reference', to: [{ type: 'skill'}]}],
+        validation: [
+          (Rule) => Rule.min(0),
+          (Rule) => Rule.max(5).error('Restrict these to only your top 5 skills.'),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+        ]
+      },
+      {
+        name: 'languageSkills',
+        title: 'Natural language skills',
+        description: 'An optional ordered list of natural language skills.',
+        type: 'array',
+        of: [{ type: 'reference', to: [{ type: 'languageSkill'}]}],
+        validation: [
+          (Rule) => Rule.min(1).required().error('At least one natural language skill is mandatory.'),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+        ]
+      },
+      {
         name: 'keywords',
         title: 'Keywords',
         type: 'array',
@@ -65,7 +89,7 @@ export default defineType({
         validation: [
           (Rule) => Rule.min(0),
           (Rule) => Rule.max(32).error('You have too many keywords.'),
-          (Rule) => Rule.unique().error('You have duplicate keywords.'),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
         ]
       },
       {
