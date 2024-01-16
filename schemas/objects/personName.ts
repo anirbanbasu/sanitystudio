@@ -58,15 +58,12 @@ export default defineType({
         type: 'string',
         options: {
             list: [ 
-                {title: 'Unknown', value: 'unknown'},
                 {title: 'Other', value: 'other'},
                 {title: 'They/Them', value: 'they/them'},
                 {title: 'She/Her', value: 'she/her'},
                 {title: 'He/Him', value: 'he/him'},  
             ],
         },
-        initialValue: 'unknown',
-        validation: (Rule) => Rule.required().error('The choice of pronouns is mandatory for a person.'),
       },
     ],
   })
