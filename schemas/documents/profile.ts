@@ -47,12 +47,23 @@ export default defineType({
       {
         name: 'summary',
         title: 'Summary',
-        description: 'A rich text summary of the researcher profile.',
+        description: 'A summary of the researcher profile.',
         type: 'array',
         of: [{ type: 'block'}],
         validation: Rule => [
             Rule.required().error('A summary of the researcher profile is mandatory.'),
         ],
+      },
+      {
+        name: 'formalEducation',
+        title: 'Formal education',
+        description: 'An optional ordered list of formal education.',
+        type: 'array',
+        of: [{ type: 'reference', to: [{ type: 'education'}]}],
+        validation: [
+          (Rule) => Rule.min(0),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+        ]
       },
       {
         name: 'skills',

@@ -3,22 +3,21 @@ import { GiHumanTarget } from "react-icons/gi";
 
 export default defineType({
     name: 'publicationAuthor',
-    title: 'Publication author',
+    title: 'Publication authors',
     type: 'document',
     icon: GiHumanTarget,
     description: 'An author of a publication.',
     preview: {
       select: {
           authorType: 'authorType',
-          familyName: 'familyName',
+          personName: 'personName',
           organisationName: 'organisationName',
-          givenNames: 'givenNames',
           orcid: 'orcid',
           image: 'imageRef.imageData.asset',                
       },
-      prepare: ({ authorType, familyName, organisationName, givenNames, orcid, image }) => {
+      prepare: ({ authorType, personName, organisationName, orcid, image }) => {
           return {
-              title: authorType === 'Person' ? (typeof givenNames!=='undefined' ? `${familyName}, ${givenNames.join(' ')}` : `${familyName}`) : organisationName,
+              title: authorType === 'Person' ? (typeof personName.givenNames!=='undefined' ? `${personName.familyName}, ${personName.givenNames.join(' ')}` : `${personName.familyName}`) : organisationName,
               subtitle: authorType === 'Person' ? typeof orcid!=='undefined' ? `${authorType} (${orcid})` : `${authorType}` : authorType,
               media: image,
           }
@@ -40,17 +39,12 @@ export default defineType({
         validation: (Rule) => Rule.required().error('The type of the publication is mandatory.'),
       },
       {
-        name: 'familyName',
-        title: 'Family name',
-        type: 'string',
-        description: 'Family name of the author.',
+        name: 'personName',
+        title: 'Name',
+        type: 'personName',
+        description: 'Name of the author.',
         hidden: ({ document }) => (document?.authorType !== 'Person'),
-        validation: (Rule) => Rule.custom((fieldValue, context) => {
-          if (context.document?.authorType === 'Person' && typeof fieldValue === 'undefined') {
-            return 'Family name is mandatory for a person.'
-          }
-          return true        
-        }),
+        validation: (Rule) => Rule.required().error('The name of the author is mandatory.'),
       },
       {
         name: 'organisationName',
@@ -67,18 +61,6 @@ export default defineType({
                 })
         ]
       },  
-      {
-        name: 'givenNames',
-        title: 'Given names',
-        type: 'array',
-        of: [{ type: 'string'}],
-        description: 'A list of given names of the author. A minimum of 1 and a maximum of 16 names are supported.',
-        hidden: ({ document }) => (document?.authorType !== 'Person'),
-        validation: [
-          (Rule) => Rule.required().min(1).error('You need to provide at least one name for the author.'),
-          (Rule) => Rule.max(16).error('You have too many names for the author.'),
-        ]
-      },
       {
         name: 'orcid',
         title: 'ORCiD of the author',

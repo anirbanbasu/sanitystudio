@@ -12,7 +12,7 @@ const levels = [
 
 export default defineType({
     name: 'languageSkill',
-    title: 'Language (skill)',
+    title: 'Language skills',
     type: 'document',
     icon: MdOutlineLanguage,
     preview: {

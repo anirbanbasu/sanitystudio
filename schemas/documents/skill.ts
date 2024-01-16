@@ -5,7 +5,7 @@ import { GiSkills } from "react-icons/gi";
 
 export default defineType({
     name: 'skill',
-    title: 'Skill',
+    title: 'Skills',
     description: 'Skill that is not a natural language.',
     type: 'document',
     icon: GiSkills,

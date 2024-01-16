@@ -8,18 +8,20 @@ import publicationAuthor from './documents/publicationAuthor'
 import personName from './objects/personName'
 import skill from './documents/skill'
 import languageSkill from './documents/languageSkill'
+import education from './documents/education'
 
 export const schemaTypes = [
     //documents
-    profileSummary,
     profile,
-    publicationAuthor,
+    education,
     researchPublication,
+    skill,
+    languageSkill,
     post,
     photograph,
     photographCollection,
-    skill,
-    languageSkill,
+    profileSummary,
+    publicationAuthor,
     //objects
     personName,
 ]
