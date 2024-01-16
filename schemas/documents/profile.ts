@@ -68,14 +68,15 @@ export default defineType({
       },
       {
         name: 'languageSkills',
-        title: 'Natural language skills',
-        description: 'An optional ordered list of natural language skills.',
+        title: 'Top natural language skills',
+        description: 'An optional ordered list of top natural language skills.',
         type: 'array',
         of: [{ type: 'reference', to: [{ type: 'languageSkill'}]}],
         validation: [
-          (Rule) => Rule.min(1).required().error('At least one natural language skill is mandatory.'),
+          (Rule) => Rule.min(0),
+          (Rule) => Rule.max(5).error('Restrict these to only your top 5 language skills.'),
           (Rule) => Rule.unique().error('Duplicates are not allowed.'),
-        ]
+        ],
       },
       {
         name: 'keywords',
