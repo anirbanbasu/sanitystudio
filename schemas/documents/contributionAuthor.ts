@@ -2,11 +2,11 @@ import { defineType } from "sanity";
 import { GiHumanTarget } from "react-icons/gi";
 
 export default defineType({
-    name: 'publicationAuthor',
-    title: 'Publication authors',
+    name: 'contributionAuthor',
+    title: 'Contributing authors',
     type: 'document',
     icon: GiHumanTarget,
-    description: 'An author of a publication.',
+    description: 'An author of a publication or a contributor of a project.',
     preview: {
       select: {
           authorType: 'authorType',
@@ -36,7 +36,7 @@ export default defineType({
             ],
             layout: 'radio',
         },
-        validation: (Rule) => Rule.required().error('The type of the publication is mandatory.'),
+        validation: (Rule) => Rule.required().error('The type of the author is mandatory.'),
       },
       {
         name: 'personName',
@@ -44,7 +44,7 @@ export default defineType({
         type: 'personName',
         description: 'Name of the author.',
         hidden: ({ document }) => (document?.authorType !== 'Person'),
-        validation: (Rule) => Rule.required().error('The name of the author is mandatory.'),
+        validation: (Rule) => Rule.required().error('Name of the author is mandatory.'),
       },
       {
         name: 'organisationName',
@@ -83,6 +83,18 @@ export default defineType({
             }
          }
          return true // does not matter for organisations
+        }),
+      },
+      {
+        name: 'webURL',
+        title: 'Website URL',
+        type: 'url',
+        description: 'Optional website of the author.',
+        //hidden: ({ document }) => (document?.authorType !== 'Person'),
+        validation: (Rule) => Rule.uri({
+          scheme: ['http', 'https'],
+          allowRelative: false,
+          allowCredentials: false,
         }),
       },
       {

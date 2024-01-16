@@ -47,7 +47,7 @@ export default defineType({
         of: [
           {
             type: 'reference',
-            to: [{type: 'publicationAuthor'}],
+            to: [{type: 'contributionAuthor'}],
           }
         ],
         options: {

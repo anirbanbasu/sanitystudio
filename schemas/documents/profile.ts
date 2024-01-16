@@ -66,6 +66,18 @@ export default defineType({
         ]
       },
       {
+        name: 'projects',
+        title: 'Featured projects',
+        description: 'An optional ordered list of featured projects.',
+        type: 'array',
+        of: [{ type: 'reference', to: [{ type: 'project'}]}],
+        validation: [
+          (Rule) => Rule.min(0),
+          (Rule) => Rule.max(5).error('Restrict these to only your top 5 projects.'),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+        ],
+      },
+      {
         name: 'skills',
         title: 'Top skills',
         description: 'An optional ordered list of top skills (not natural languages).',
@@ -97,7 +109,7 @@ export default defineType({
         options: {
           layout: 'tags',
         },
-        description: 'Optional keywords: a maximum of 32 is supported. These keywords will be added to the metadata of the relevant HTML page(s).',
+        description: 'Optional keywords: a maximum of 32 is supported.',
         validation: [
           (Rule) => Rule.min(0),
           (Rule) => Rule.max(32).error('You have too many keywords.'),

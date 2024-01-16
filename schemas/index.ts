@@ -4,11 +4,12 @@ import photographCollection from './documents/photographCollection'
 import profile from './documents/profile'
 import profileSummary from './documents/profileSummary'
 import researchPublication from './documents/researchPublication'
-import publicationAuthor from './documents/publicationAuthor'
 import personName from './objects/personName'
 import skill from './documents/skill'
 import languageSkill from './documents/languageSkill'
 import education from './documents/education'
+import contributionAuthor from './documents/contributionAuthor'
+import project from './documents/project'
 
 export const schemaTypes = [
     //documents
@@ -20,8 +21,9 @@ export const schemaTypes = [
     post,
     photograph,
     photographCollection,
+    project,
+    contributionAuthor,
     profileSummary,
-    publicationAuthor,
     //objects
     personName,
 ]
