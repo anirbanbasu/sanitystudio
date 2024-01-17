@@ -2,7 +2,6 @@ import post from './documents/post'
 import photograph from './documents/photograph'
 import photographCollection from './documents/photographCollection'
 import profile from './documents/profile'
-import profileSummary from './documents/profileSummary'
 import researchPublication from './documents/researchPublication'
 import personName from './objects/personName'
 import skill from './documents/skill'
@@ -23,7 +22,6 @@ export const schemaTypes = [
     photographCollection,
     project,
     contributionAuthor,
-    profileSummary,
     //objects
     personName,
 ]

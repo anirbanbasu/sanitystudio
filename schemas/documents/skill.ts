@@ -1,5 +1,5 @@
 import { defineType } from 'sanity'
-import { GiSkills } from "react-icons/gi";
+import { GoWorkflow } from "react-icons/go";
 
 const levels = [ 
   {title: 'Beginner', value: 1},
@@ -14,7 +14,7 @@ export default defineType({
     title: 'Skills',
     description: 'Skill that is not a natural language.',
     type: 'document',
-    icon: GiSkills,
+    icon: GoWorkflow,
     preview: {
       select: {
           skill: 'skill',
