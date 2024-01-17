@@ -1,7 +1,13 @@
 import { defineType } from 'sanity'
 import { GiSkills } from "react-icons/gi";
 
-
+const levels = [ 
+  {title: 'Beginner', value: 1},
+  {title: 'Intermediate', value: 2},
+  {title: 'Advanced', value: 3},
+  {title: 'Professional', value: 4},
+  {title: 'Expert', value: 5},  
+]
 
 export default defineType({
     name: 'skill',
@@ -18,7 +24,7 @@ export default defineType({
       prepare({ skill, level, note }) {
         return {
           title: `${skill}`,
-          subtitle: typeof note !== 'undefined' ? `(${level}) ${note}` : `${level}`,
+          subtitle: typeof note !== 'undefined' ? `(L:${level}) ${note}` : `L:${level}`,
         }
       }
     },
@@ -38,17 +44,12 @@ export default defineType({
       },
       {
         name: 'level',
-        type: 'string',
+        type: 'number',
         title: 'Skill level',
         description: 'A self-assessed level of the skill.',
         validation: (Rule) => Rule.required().error('The level of the skill is mandatory.'),
         options: {
-            list: [ 
-                {title: 'Beginner', value: 'beginner'},
-                {title: 'Intermediate', value: 'intermediate'},
-                {title: 'Advanced', value: 'advanced'},
-                {title: 'Expert', value: 'expert'},  
-            ],
+            list: levels,
         },
       }
     ],
