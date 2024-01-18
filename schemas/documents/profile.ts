@@ -55,9 +55,20 @@ export default defineType({
         ],
       },
       {
+        name: 'experience',
+        title: 'Work and voluntary experiences',
+        description: 'An optional ordered list of work and voluntary experiences.',
+        type: 'array',
+        of: [{ type: 'reference', to: [{ type: 'experience'}]}],
+        validation: [
+          (Rule) => Rule.min(0),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+        ]
+      },
+      {
         name: 'education',
         title: 'School or university education',
-        description: 'An optional ordered list of formal education.',
+        description: 'An optional ordered list of educational achievements.',
         type: 'array',
         of: [{ type: 'reference', to: [{ type: 'education'}]}],
         validation: [

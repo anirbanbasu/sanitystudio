@@ -10,11 +10,13 @@ import education from './documents/education'
 import contributionAuthor from './documents/contributionAuthor'
 import project from './documents/project'
 import picture from './documents/picture'
+import experience from './documents/experience'
 
 export const schemaTypes = [
     //documents
     profile,
     education,
+    experience,
     researchPublication,
     skill,
     languageSkill,

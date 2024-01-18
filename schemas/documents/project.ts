@@ -83,22 +83,28 @@ export default defineType({
         ]
       },
       {
-        name: 'relatedProjects',
-        title: 'Related projects',
-        description: 'Optional list of related projects. THIS NEEDS TO BE CHANGED TO A LIST OF EXPERIENCES OR EMPLOYMENTS.',
-        type: 'array',
-        of: [{ type: 'reference', to: [{ type: 'project'}]}],
-        validation: [
-          (Rule) => Rule.min(0),
-          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
-        ]
-      },
-      {
         name: 'representativePicture',
         title: 'Representative picture',
         type: 'reference',
         to: [{ type: 'picture'}],
         description: 'Optional representative picture of the project.',
+      },
+      {
+        name: 'otherPictures',
+        title: 'Other pictures',
+        type: 'array',
+        of: [
+          {
+            type: 'reference',
+            to: [{ type: 'picture'}],
+          }
+        ],
+        description: 'Optional pictures relevant to the project. Up to a maximum of 16 are allowed.',
+        validation: [
+          (Rule) => Rule.min(0),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+          (Rule) => Rule.max(16).error('You have too many pictures.'),
+        ]
       },
       {
         name: 'keywords',
