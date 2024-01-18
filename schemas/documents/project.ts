@@ -12,12 +12,14 @@ export default defineType({
       select: {
           name: 'name',
           startDate: 'startDate',
-          endDate: 'endDate',               
+          endDate: 'endDate',      
+          media: 'representativePicture.imageData.asset',         
       },
-      prepare({ name, startDate, endDate }) {
+      prepare({ name, startDate, endDate, media }) {
         return {
           title: name,
           subtitle: typeof startDate !== 'undefined' ? (typeof endDate !== 'undefined' ? `${startDate} - ${endDate}` : `${startDate} - `)  : '',
+          media,
         }
       }
     },
@@ -90,6 +92,13 @@ export default defineType({
           (Rule) => Rule.min(0),
           (Rule) => Rule.unique().error('Duplicates are not allowed.'),
         ]
+      },
+      {
+        name: 'representativePicture',
+        title: 'Representative picture',
+        type: 'reference',
+        to: [{ type: 'picture'}],
+        description: 'Optional representative picture of the project.',
       },
       {
         name: 'keywords',

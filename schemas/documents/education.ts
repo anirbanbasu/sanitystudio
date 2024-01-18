@@ -5,7 +5,7 @@ import { FaUserGraduate } from "react-icons/fa";
 export default defineType({
     name: 'education',
     title: 'Education',
-    description: 'Formal education.',
+    description: 'School or university education.',
     type: 'document',
     icon: FaUserGraduate,
     preview: {

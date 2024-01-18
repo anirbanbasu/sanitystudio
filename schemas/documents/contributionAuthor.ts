@@ -101,7 +101,7 @@ export default defineType({
         name: 'imageRef',
         title: 'Image',
         type: 'reference',
-        to: [{ type: 'photograph'}],
+        to: [{ type: 'picture'}],
         description: 'An optional profile picture of a person or a logo of an organisation.',
       },
     ],

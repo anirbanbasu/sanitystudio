@@ -51,6 +51,21 @@ export default defineType({
         options: {
             list: levels,
         },
-      }
+      },
+      {
+        name: 'keywords',
+        title: 'Keywords',
+        type: 'array',
+        of: [{ type: 'string'}],
+        options: {
+          layout: 'tags',
+        },
+        description: 'Optional keywords: a maximum of 32 is supported. These can be used to group skills together.',
+        validation: [
+          (Rule) => Rule.min(0),
+          (Rule) => Rule.max(32).error('You have too many keywords.'),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+        ]
+      },
     ],
   })

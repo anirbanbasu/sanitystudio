@@ -9,6 +9,7 @@ import languageSkill from './documents/languageSkill'
 import education from './documents/education'
 import contributionAuthor from './documents/contributionAuthor'
 import project from './documents/project'
+import picture from './documents/picture'
 
 export const schemaTypes = [
     //documents
@@ -18,10 +19,11 @@ export const schemaTypes = [
     skill,
     languageSkill,
     post,
-    photograph,
-    photographCollection,
+    picture,
     project,
     contributionAuthor,
+    photograph,
+    photographCollection,
     //objects
     personName,
 ]
