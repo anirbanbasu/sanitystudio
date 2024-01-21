@@ -1,6 +1,6 @@
 import { defineType } from 'sanity'
 import { IoShareSocialOutline } from "react-icons/io5";
-import { Si500Px, SiAcademia, SiArtstation, SiBehance, SiBitbucket, SiDribbble, SiEtsy, SiFacebook, SiFlickr, SiGithub, SiGitlab, SiGoodreads, SiGooglescholar, SiInstagram, SiLinkedin, SiMedium, SiOrcid, SiPatreon, SiPinterest, SiReddit, SiResearchgate, SiSketchfab, SiSnapchat, SiSoundcloud, SiSpotify, SiStackexchange, SiStackoverflow, SiTiktok, SiTumblr, SiTwitch, SiTwitter, SiVimeo, SiWordpress, SiYoutube, SiZotero } from "react-icons/si";
+import { Si500Px, SiAcademia, SiArtstation, SiBehance, SiBitbucket, SiDribbble, SiEtsy, SiFacebook, SiFlickr, SiGithub, SiGitlab, SiGoodreads, SiGooglescholar, SiInstagram, SiLinkedin, SiMedium, SiOrcid, SiPatreon, SiPinterest, SiReddit, SiResearchgate, SiSketchfab, SiSnapchat, SiSociety6, SiSoundcloud, SiSpotify, SiStackexchange, SiStackoverflow, SiTiktok, SiTumblr, SiTwitch, SiTwitter, SiVimeo, SiWordpress, SiYoutube, SiZotero } from "react-icons/si";
 import { IconType } from 'react-icons';
 
 
@@ -28,6 +28,7 @@ const knownSocialLinks = [
     {title: 'ResearchGate', value: 'researchgate'},
     {title: 'Sketchfab', value: 'sketchfab'},
     {title: 'Snapchat', value: 'snapchat'},
+    {title: 'Society6', value: 'society6'},
     {title: 'SoundCloud', value: 'soundcloud'},
     {title: 'Spotify', value: 'spotify'},
     {title: 'StackExchange', value: 'stackexchange'},
@@ -126,6 +127,9 @@ export default defineType({
             break
           case 'snapchat':
             icon = SiSnapchat
+            break
+          case 'society6':
+            icon = SiSociety6
             break
           case 'soundcloud':
             icon = SiSoundcloud
