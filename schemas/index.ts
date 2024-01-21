@@ -11,6 +11,7 @@ import contributionAuthor from './documents/contributionAuthor'
 import project from './documents/project'
 import picture from './documents/picture'
 import experience from './documents/experience'
+import socialLink from './documents/socialLink'
 
 export const schemaTypes = [
     //documents
@@ -24,6 +25,7 @@ export const schemaTypes = [
     picture,
     project,
     contributionAuthor,
+    socialLink,
     photograph,
     photographCollection,
     //objects

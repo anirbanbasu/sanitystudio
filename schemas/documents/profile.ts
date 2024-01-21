@@ -113,6 +113,26 @@ export default defineType({
         ],
       },
       {
+        name: 'profileImage',
+        title: 'Profile image',
+        type: 'reference',
+        to: [{ type: 'picture'}],
+        description: 'A profile picture of the researcher.',
+        validation: (Rule) => Rule.required().error('The profile picture of the researcher is mandatory.'),
+      },
+      {
+        name: 'socialLinks',
+        title: 'Social links',
+        type: 'array',
+        of: [{ type: 'reference', to: [{ type: 'socialLink'}]}],
+        description: 'Optional social links: a maximum of 16 is supported.',
+        validation: [
+          (Rule) => Rule.min(0),
+          (Rule) => Rule.max(16).error('You have too many social links.'),
+          (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+        ]
+      },
+      {
         name: 'keywords',
         title: 'Keywords',
         type: 'array',
@@ -126,14 +146,6 @@ export default defineType({
           (Rule) => Rule.max(32).error('You have too many keywords.'),
           (Rule) => Rule.unique().error('Duplicates are not allowed.'),
         ]
-      },
-      {
-        name: 'profileImage',
-        title: 'Profile image',
-        type: 'reference',
-        to: [{ type: 'picture'}],
-        description: 'A profile picture of the researcher.',
-        validation: (Rule) => Rule.required().error('The profile picture of the researcher is mandatory.'),
       },
       {
         // should match 'languageField' plugin configuration setting, if customized
