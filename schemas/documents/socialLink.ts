@@ -44,6 +44,45 @@ const knownSocialLinks = [
     {title: 'Other', value: 'other'},  
 ]
 
+const socialIconMap = new Map<string, IconType>([
+  ["500px", Si500Px],
+  ["academia", SiAcademia],
+  ["artstation", SiArtstation],
+  ["behance", SiBehance],
+  ["bitbucket", SiBitbucket],
+  ["dribble", SiDribbble],
+  ["etsy", SiEtsy],
+  ["facebook", SiFacebook],
+  ["flickr", SiFlickr],
+  ["github", SiGithub],
+  ["gitlab", SiGitlab],
+  ["goodreads", SiGoodreads],
+  ["googlescholar", SiGooglescholar],
+  ["instagram", SiInstagram],
+  ["linkedin", SiLinkedin],
+  ["medium", SiMedium],
+  ["orcid", SiOrcid],
+  ["patreon", SiPatreon],
+  ["pinterest", SiPinterest],
+  ["reddit", SiReddit],
+  ["researchgate", SiResearchgate],
+  ["sketchfab", SiSketchfab],
+  ["snapchat", SiSnapchat],
+  ["society6", SiSociety6],
+  ["soundcloud", SiSoundcloud],
+  ["spotify", SiSpotify],
+  ["stackexchange", SiStackexchange],
+  ["stackoverflow", SiStackoverflow],
+  ["tiktok", SiTiktok],
+  ["tumblr", SiTumblr],
+  ["twitch", SiTwitch],
+  ["twitter", SiTwitter],
+  ["vimeo", SiVimeo],
+  ["wordpress", SiWordpress],
+  ["youtube", SiYoutube],
+  ["zotero", SiZotero],
+]);
+
 export default defineType({
     name: 'socialLink',
     title: 'Social links',
@@ -57,118 +96,7 @@ export default defineType({
           linkURL: 'linkURL',               
       },
       prepare({ knownType, customType, caption, linkURL }) {
-        var icon:IconType = IoShareSocialOutline
-        switch (knownType) {
-          case '500px':
-            icon = Si500Px
-            break
-          case 'academia':
-            icon = SiAcademia
-            break
-          case 'artstation':
-            icon = SiArtstation
-            break
-          case 'behance':
-            icon = SiBehance
-            break
-          case 'bitbucket':
-            icon = SiBitbucket
-            break
-          case 'dribble':
-            icon = SiDribbble
-            break
-          case 'etsy':
-            icon = SiEtsy
-            break
-          case 'facebook':
-            icon = SiFacebook
-            break
-          case 'flickr':
-            icon = SiFlickr
-            break
-          case 'github':
-            icon = SiGithub
-            break
-          case 'gitlab':
-            icon = SiGitlab
-            break
-          case 'goodreads':
-            icon = SiGoodreads
-            break
-          case 'googlescholar':
-            icon = SiGooglescholar
-            break
-          case 'instagram':
-            icon = SiInstagram
-            break
-          case 'linkedin':
-            icon = SiLinkedin
-            break
-          case 'medium':
-            icon = SiMedium
-            break
-          case 'orcid':
-            icon = SiOrcid
-            break
-          case 'patreon':
-            icon = SiPatreon
-            break
-          case 'pinterest':
-            icon = SiPinterest
-            break
-          case 'reddit':
-            icon = SiReddit
-            break
-          case 'researchgate':
-            icon = SiResearchgate
-            break
-          case 'sketchfab':
-            icon = SiSketchfab
-            break
-          case 'snapchat':
-            icon = SiSnapchat
-            break
-          case 'society6':
-            icon = SiSociety6
-            break
-          case 'soundcloud':
-            icon = SiSoundcloud
-            break
-          case 'spotify':
-            icon = SiSpotify
-            break
-          case 'stackexchange':
-            icon = SiStackexchange
-            break
-          case 'stackoverflow':
-            icon = SiStackoverflow
-            break
-          case 'tiktok':
-            icon = SiTiktok
-            break
-          case 'tumblr':
-            icon = SiTumblr
-            break
-          case 'twitch':
-            icon = SiTwitch
-            break
-          case 'twitter':
-            icon = SiTwitter
-            break
-          case 'vimeo':
-            icon = SiVimeo
-            break
-          case 'wordpress':
-            icon = SiWordpress
-            break
-          case 'youtube':
-            icon = SiYoutube
-            break
-          case 'zotero':
-            icon = SiZotero
-            break
-          default:
-        }
+        var icon:IconType = socialIconMap.get(knownType.toLowerCase()) || IoShareSocialOutline;
         return {
           title: typeof knownType !== 'undefined' ? (knownType === 'other' ? customType : knownType) : customType,
           subtitle: caption,
