@@ -1,8 +1,8 @@
 const languages = [
     {id: 'en', title: 'English', isDefault: true},
     {id: 'ja', title: '日本語'},
-    {id: 'ba', title: 'বাংলা'},
     {id: 'es', title: 'Español'},
+    {id: 'de', title: 'Deutsch'},
   ]
   
 const defaultLanguage = languages.find((item) => item.isDefault);

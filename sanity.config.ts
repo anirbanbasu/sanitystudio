@@ -75,5 +75,5 @@ export default defineConfig({
     types: schemaTypes,
   },
 
-  //productionUrl({ previewSecretId, types: ['post'], apiVersion }),
+  //productionUrl({ previewSecretId, types: ['profile'], apiVersion }),
 })
