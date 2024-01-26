@@ -53,7 +53,12 @@ export default defineType({
         options: {
           sortable: false,
         },
-        validation: (Rule) => Rule.required().error('You need to provide at least one author for the publication.'),
+        validation: (Rule) => Rule.custom((fieldValue, context) => {
+          if (context.document?.publicationType === 'manual' && typeof fieldValue === 'undefined') {
+            return true // ok, no authors for a manual
+          }
+          return 'You need to provide at least one author for the publication.'       
+        }),
       },
       {
         name: 'year',
@@ -61,6 +66,31 @@ export default defineType({
         type: 'number',
         description: 'Year of publication.',
         validation: (Rule) => Rule.required().error('The year of the publication is mandatory.'),
+      },
+      {
+        name: 'school',
+        title: 'School',
+        type: 'string',
+        description: 'The school or university with the degree programme requiring this thesis.',
+        hidden: ({ document }) => (document?.publicationType !== 'mastersthesis' &&
+                                   document?.publicationType !== 'phdthesis'),
+        validation: (Rule) => Rule.custom((fieldValue, context) => {
+          if (context.document?.publicationType === 'mastersthesis' && typeof fieldValue === 'undefined') {
+            return 'Publisher is mandatory for a publication that is a Masters thesis.'
+          }
+          if (context.document?.publicationType === 'phdthesis' && typeof fieldValue === 'undefined') {
+            return 'Publisher is mandatory for a publication that is a PhD thesis.'
+          }
+          return true        
+        }),
+      },
+      {
+        name: 'type',
+        title: 'Type',
+        type: 'string',
+        description: 'The type of the thesis, e.g., Masters thesis.',
+        hidden: ({ document }) => (document?.publicationType !== 'phdthesis' &&
+                                   document?.publicationType !== 'mastersthesis'),
       },
       {
         name: 'month',
@@ -75,6 +105,7 @@ export default defineType({
                                    document?.publicationType !== 'inproceedings' &&
                                    document?.publicationType !== 'manual' &&
                                    document?.publicationType !== 'mastersthesis' &&
+                                   document?.publicationType !== 'phdthesis' &&
                                    document?.publicationType !== 'proceedings'),
         options: {
           list: [
@@ -100,7 +131,10 @@ export default defineType({
         description: 'Volume in which this publication appears.',
         hidden: ({ document }) => (document?.publicationType !== 'article' &&
                                    document?.publicationType !== 'booklet' &&
-                                   document?.publicationType !== 'conference'),
+                                   document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inbook' &&
+                                   document?.publicationType !== 'incollection' &&
+                                   document?.publicationType !== 'inproceedings'),
       },
       {
         name: 'number',
@@ -109,7 +143,10 @@ export default defineType({
         description: 'Volume number in which this publication appears.',
         hidden: ({ document }) => (document?.publicationType !== 'article' &&
                                    document?.publicationType !== 'booklet' &&
-                                   document?.publicationType !== 'conference'),
+                                   document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inbook' &&
+                                   document?.publicationType !== 'incollection' &&
+                                   document?.publicationType !== 'inproceedings'),
       },
       {
         name: 'pages',
@@ -118,7 +155,10 @@ export default defineType({
         description: 'The page numbers on which this publication appears.',
         hidden: ({ document }) => (document?.publicationType !== 'article' &&
                                    document?.publicationType !== 'booklet' &&
-                                   document?.publicationType !== 'conference'),
+                                   document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inbook' &&
+                                   document?.publicationType !== 'incollection' &&
+                                   document?.publicationType !== 'inproceedings'),
       },
       {
         name: 'editor',
@@ -126,7 +166,18 @@ export default defineType({
         type: 'string',
         description: 'The editor(s) for this publication.',
         hidden: ({ document }) => (document?.publicationType !== 'booklet' &&
-                                   document?.publicationType !== 'conference'),
+                                   document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inbook' &&
+                                   document?.publicationType !== 'incollection' &&
+                                   document?.publicationType !== 'inproceedings'),
+      },
+      {
+        name: 'edition',
+        title: 'Edition',
+        type: 'string',
+        description: 'The edition for this publication.',
+        hidden: ({ document }) => (document?.publicationType !== 'inbook' &&
+                                   document?.publicationType !== 'manual'),
       },
       {
         name: 'series',
@@ -134,7 +185,10 @@ export default defineType({
         type: 'string',
         description: 'The series in which this publication appears.',
         hidden: ({ document }) => (document?.publicationType !== 'booklet' &&
-                                   document?.publicationType !== 'conference'),
+                                   document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inbook' && 
+                                   document?.publicationType !== 'incollection' &&
+                                   document?.publicationType !== 'inproceedings'),
       },
       {
         name: 'organisation',
@@ -142,7 +196,9 @@ export default defineType({
         type: 'string',
         description: 'The organisation that published or sponsored this work.',
         hidden: ({ document }) => (document?.publicationType !== 'booklet' &&
-                                   document?.publicationType !== 'conference'),
+                                   document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inproceedings' &&
+                                   document?.publicationType !== 'manual'),
       },
       {
         name: 'journal',
@@ -163,10 +219,19 @@ export default defineType({
         type: 'string',
         description: 'The publisher of this publication.',
         hidden: ({ document }) => (document?.publicationType !== 'book' &&
-                                   document?.publicationType !== 'conference'),
+                                   document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inbook' &&
+                                   document?.publicationType !== 'incollection' &&
+                                   document?.publicationType !== 'inproceedings'),
         validation: (Rule) => Rule.custom((fieldValue, context) => {
           if (context.document?.publicationType === 'book' && typeof fieldValue === 'undefined') {
             return 'Publisher is mandatory for a publication that is a book.'
+          }
+          if (context.document?.publicationType === 'inbook' && typeof fieldValue === 'undefined') {
+            return 'Publisher is mandatory for a publication that is in a book.'
+          }
+          if (context.document?.publicationType === 'incollection' && typeof fieldValue === 'undefined') {
+            return 'Publisher is mandatory for a publication that is in a collection.'
           }
           return true        
         }),
@@ -178,7 +243,13 @@ export default defineType({
         description: 'Addresser of the publisher of this publication.',
         hidden: ({ document }) => (document?.publicationType !== 'book' &&
                                    document?.publicationType !== 'booklet' &&
-                                   document?.publicationType !== 'conference'),
+                                   document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inbook' &&
+                                   document?.publicationType !== 'incollection' &&
+                                   document?.publicationType !== 'inproceedings' &&
+                                   document?.publicationType !== 'manual' &&
+                                   document?.publicationType !== 'mastersthesis' &&
+                                   document?.publicationType !== 'phdthesis'),
         validation: (Rule) => Rule.custom((fieldValue, context) => {
           if (context.document?.publicationType === 'book' && typeof fieldValue === 'undefined') {
             return 'Address of the publisher is mandatory for a publication that is a book.'
@@ -207,10 +278,22 @@ export default defineType({
         title: 'Book title',
         type: 'string',
         description: 'Title of the book in which this publication appears.',
-        hidden: ({ document }) => (document?.publicationType !== 'conference'),
+        hidden: ({ document }) => (document?.publicationType !== 'conference' &&
+                                   document?.publicationType !== 'inbook' &&
+                                   document?.publicationType !== 'incollection' &&
+                                   document?.publicationType !== 'inproceedings'),
         validation: (Rule) => Rule.custom((fieldValue, context) => {
           if (context.document?.publicationType === 'conference' && typeof fieldValue === 'undefined') {
             return 'This field is mandatory for a publication that is a conference.'
+          }
+          if (context.document?.publicationType === 'inbook' && typeof fieldValue === 'undefined') {
+            return 'This field is mandatory for a publication in a book.'
+          }
+          if (context.document?.publicationType === 'incollection' && typeof fieldValue === 'undefined') {
+            return 'This field is mandatory for a publication in a collection.'
+          }
+          if (context.document?.publicationType === 'inproceedings' && typeof fieldValue === 'undefined') {
+            return 'This field is mandatory for a publication in proceedings.'
           }
           return true        
         }),
@@ -218,9 +301,8 @@ export default defineType({
       {
         name: 'notes',
         title: 'Notes',
-        type: 'array',
-        of: [{ type: 'block'}],
-        description: 'Notes, in rich text, for this publication.',
+        type: 'text',
+        description: 'Notes for this publication.',
       },
     ],
   })
