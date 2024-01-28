@@ -1,8 +1,6 @@
 import { defineType } from 'sanity'
 import { IoNewspaperOutline } from "react-icons/io5";
 
-import personName from '../objects/personName'
-
 export default defineType({
     name: 'researchPublication',
     title: 'Research publication',
@@ -12,14 +10,22 @@ export default defineType({
       select: {
           title: 'title',
           year: 'year',
-          author0: 'authors.0.personName',
+          author0person: 'authors.0.personName',
+          author1person: 'authors.1.personName',
+          author0organisation: 'authors.0.organisationName',
           publicationType: 'publicationType',
       },
-      prepare({ title, year, author0, publicationType }) {
-        console.log(author0)
+      prepare({ title, year, author0person, author1person, author0organisation, publicationType }) {
         return {
           title: typeof year !== 'undefined' ? `${year}: ${title}` : `${title}`,
-          subtitle: publicationType.concat(' ', typeof author0 !== 'undefined' ? author0.familyName : ''),
+          subtitle: publicationType.concat(' ', 
+            typeof author0person !== 'undefined' ? 
+                author0person.familyName.concat(' ',
+                    author0person.givenNames.map(
+                      (givenName:string)=>givenName[0].toUpperCase()).join(' '))
+                      .concat(
+                        typeof author1person !== 'undefined'? ', et al.' : '') //TODO: Use et al. only if there are more than 2 authors
+                : author0organisation),
         }
       }
     },
@@ -59,9 +65,15 @@ export default defineType({
           source: (document: {
               year: number,
               title: string,
-              //authors: {personName: personName} [],
+              authors: {personName: {familyName: string}} [],
             }) => {
-            return `${document?.year}-${document.title}`
+            if(document.authors.length > 0) {
+              //TODO: Expand the reference as shown in https://github.com/sanity-io/sanity/issues/1743
+              return `${document?.authors[0].personName}-${document?.year}-${document.title}`
+            }
+            else {
+              return `${document?.year}-${document.title}`
+            }
           }
         },
       },
@@ -86,7 +98,8 @@ export default defineType({
         options: {
           sortable: false,
         },
-        validation: (Rule) => Rule.custom((fieldValue, context) => {
+        validation: [
+          (Rule) => Rule.custom((fieldValue, context) => {
           if (context.document?.publicationType === 'manual' && typeof fieldValue === 'undefined') {
             return true // ok, no authors for a manual
           }
@@ -100,6 +113,8 @@ export default defineType({
             return true
           }  
         }),
+        (Rule) => Rule.unique().error('Duplicates are not allowed.'),
+      ],
       },
       {
         name: 'year',
