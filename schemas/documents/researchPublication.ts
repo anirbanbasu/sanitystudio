@@ -1,11 +1,28 @@
 import { defineType } from 'sanity'
 import { IoNewspaperOutline } from "react-icons/io5";
 
+import personName from '../objects/personName'
+
 export default defineType({
     name: 'researchPublication',
     title: 'Research publication',
     type: 'document',
     icon: IoNewspaperOutline,
+    preview: {
+      select: {
+          title: 'title',
+          year: 'year',
+          author0: 'authors.0.personName',
+          publicationType: 'publicationType',
+      },
+      prepare({ title, year, author0, publicationType }) {
+        console.log(author0)
+        return {
+          title: typeof year !== 'undefined' ? `${year}: ${title}` : `${title}`,
+          subtitle: publicationType.concat(' ', typeof author0 !== 'undefined' ? author0.familyName : ''),
+        }
+      }
+    },
     fields: [
       {
         name: 'publicationType',
@@ -13,7 +30,7 @@ export default defineType({
         type: 'string',
         description: 'The BibTeX type of publication.',
         options: {
-          list: [
+          list: [ // TODO: Make this into K-V map so that values are not compared in the validation using literal strings?
               {title: 'Article in a journal', value: 'article'}, 
               {title: 'Book', value: 'book'},
               {title: 'Booklet', value: 'booklet'},
@@ -31,6 +48,22 @@ export default defineType({
             ],
         },
         validation: (Rule) => Rule.required().error('The type of the publication is mandatory.'),
+      },
+      {
+        name: 'citationKey',
+        title: 'Citation key',
+        type: 'slug',
+        description: 'A citation key is a unique identifier for this publication. It is used in the citation of the publication.',
+        validation: (Rule) => Rule.required().error('The citation key of the publication is mandatory.'),
+        options: {
+          source: (document: {
+              year: number,
+              title: string,
+              //authors: {personName: personName} [],
+            }) => {
+            return `${document?.year}-${document.title}`
+          }
+        },
       },
       {
         name: 'title',
@@ -57,7 +90,15 @@ export default defineType({
           if (context.document?.publicationType === 'manual' && typeof fieldValue === 'undefined') {
             return true // ok, no authors for a manual
           }
-          return 'You need to provide at least one author for the publication.'       
+          else if (context.document?.publicationType === 'proceedings' && typeof fieldValue === 'undefined') {
+            return true // ok, no authors for a proceeding
+          }
+          else if (typeof fieldValue === 'undefined') {
+            return 'The list of authors is mandatory.'
+          }
+          else {
+            return true
+          }  
         }),
       },
       {
@@ -65,7 +106,20 @@ export default defineType({
         title: 'Year',
         type: 'number',
         description: 'Year of publication.',
-        validation: (Rule) => Rule.required().error('The year of the publication is mandatory.'),
+        validation: (Rule) => Rule.custom((fieldValue, context) => {
+          if (context.document?.publicationType === 'misc' && typeof fieldValue === 'undefined') {
+            return true
+          }
+          else if (context.document?.publicationType === 'unpublished' && typeof fieldValue === 'undefined') {
+            return true
+          }
+          else if (typeof fieldValue === 'undefined') {
+            return 'The year of the publication is mandatory.'
+          }
+          else {
+            return true
+          }
+        }),
       },
       {
         name: 'school',
@@ -106,7 +160,9 @@ export default defineType({
                                    document?.publicationType !== 'manual' &&
                                    document?.publicationType !== 'mastersthesis' &&
                                    document?.publicationType !== 'phdthesis' &&
-                                   document?.publicationType !== 'proceedings'),
+                                   document?.publicationType !== 'proceedings' &&
+                                   document?.publicationType !== 'techreport' &&
+                                   document?.publicationType !== 'unpublished'),
         options: {
           list: [
               {title: 'January', value: 1}, 
@@ -134,7 +190,8 @@ export default defineType({
                                    document?.publicationType !== 'conference' &&
                                    document?.publicationType !== 'inbook' &&
                                    document?.publicationType !== 'incollection' &&
-                                   document?.publicationType !== 'inproceedings'),
+                                   document?.publicationType !== 'inproceedings' &&
+                                   document?.publicationType !== 'proceedings'),
       },
       {
         name: 'number',
@@ -146,7 +203,9 @@ export default defineType({
                                    document?.publicationType !== 'conference' &&
                                    document?.publicationType !== 'inbook' &&
                                    document?.publicationType !== 'incollection' &&
-                                   document?.publicationType !== 'inproceedings'),
+                                   document?.publicationType !== 'inproceedings' &&
+                                   document?.publicationType !== 'proceedings' &&
+                                   document?.publicationType !== 'techreport'),
       },
       {
         name: 'pages',
@@ -169,7 +228,8 @@ export default defineType({
                                    document?.publicationType !== 'conference' &&
                                    document?.publicationType !== 'inbook' &&
                                    document?.publicationType !== 'incollection' &&
-                                   document?.publicationType !== 'inproceedings'),
+                                   document?.publicationType !== 'inproceedings' &&
+                                   document?.publicationType !== 'proceedings'),
       },
       {
         name: 'edition',
@@ -188,7 +248,8 @@ export default defineType({
                                    document?.publicationType !== 'conference' &&
                                    document?.publicationType !== 'inbook' && 
                                    document?.publicationType !== 'incollection' &&
-                                   document?.publicationType !== 'inproceedings'),
+                                   document?.publicationType !== 'inproceedings' &&
+                                   document?.publicationType !== 'proceedings'),
       },
       {
         name: 'organisation',
@@ -199,6 +260,19 @@ export default defineType({
                                    document?.publicationType !== 'conference' &&
                                    document?.publicationType !== 'inproceedings' &&
                                    document?.publicationType !== 'manual'),
+      },
+      {
+        name: 'institution',
+        title: 'Institution',
+        type: 'string',
+        description: 'The institution that published or sponsored this work.',
+        hidden: ({ document }) => (document?.publicationType !== 'techreport'),
+        validation: (Rule) => Rule.custom((fieldValue, context) => {
+          if (context.document?.publicationType === 'techreport' && typeof fieldValue === 'undefined') {
+            return 'Institution is mandatory for a technical report.'
+          }
+          return true        
+        }),
       },
       {
         name: 'journal',
@@ -222,7 +296,8 @@ export default defineType({
                                    document?.publicationType !== 'conference' &&
                                    document?.publicationType !== 'inbook' &&
                                    document?.publicationType !== 'incollection' &&
-                                   document?.publicationType !== 'inproceedings'),
+                                   document?.publicationType !== 'inproceedings' &&
+                                   document?.publicationType !== 'proceedings'),
         validation: (Rule) => Rule.custom((fieldValue, context) => {
           if (context.document?.publicationType === 'book' && typeof fieldValue === 'undefined') {
             return 'Publisher is mandatory for a publication that is a book.'
@@ -249,7 +324,9 @@ export default defineType({
                                    document?.publicationType !== 'inproceedings' &&
                                    document?.publicationType !== 'manual' &&
                                    document?.publicationType !== 'mastersthesis' &&
-                                   document?.publicationType !== 'phdthesis'),
+                                   document?.publicationType !== 'phdthesis' &&
+                                   document?.publicationType !== 'proceedings' &&
+                                   document?.publicationType !== 'techreport'),
         validation: (Rule) => Rule.custom((fieldValue, context) => {
           if (context.document?.publicationType === 'book' && typeof fieldValue === 'undefined') {
             return 'Address of the publisher is mandatory for a publication that is a book.'
@@ -303,6 +380,12 @@ export default defineType({
         title: 'Notes',
         type: 'text',
         description: 'Notes for this publication.',
+        validation: (Rule) => Rule.custom((fieldValue, context) => {
+          if (context.document?.publicationType === 'unpublished' && typeof fieldValue === 'undefined') {
+            return 'Publisher is mandatory for an unpublished work.'
+          }
+          return true        
+        }),
       },
     ],
   })
