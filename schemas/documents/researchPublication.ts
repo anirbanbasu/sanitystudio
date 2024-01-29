@@ -1,5 +1,19 @@
 import { defineType } from 'sanity'
 import { IoNewspaperOutline } from "react-icons/io5";
+import {createClient} from '@sanity/client'
+import {
+  dataset,
+  projectId,
+} from '../../lib/sanity.api'
+
+const client = createClient({
+  projectId: projectId,
+  dataset: dataset,
+  useCdn: true,
+  apiVersion: '2024-01-01',
+  // Required: the new 'withKeyArraySelector' option is used here instead of 'true' so that links to array items and portable text are stable even if the array is reordered
+  resultSourceMap: 'withKeyArraySelector',
+})
 
 export default defineType({
     name: 'researchPublication',
@@ -12,19 +26,25 @@ export default defineType({
           year: 'year',
           author0person: 'authors.0.personName',
           author1person: 'authors.1.personName',
+          author2person: 'authors.2.personName',
           author0organisation: 'authors.0.organisationName',
           publicationType: 'publicationType',
       },
-      prepare({ title, year, author0person, author1person, author0organisation, publicationType }) {
+      prepare({ title, year, author0person, author1person, author2person, author0organisation, publicationType }) {
         return {
-          title: typeof year !== 'undefined' ? `${year}: ${title}` : `${title}`,
-          subtitle: publicationType.concat(' ', 
+          title: typeof year !== 'undefined' ? `${title} (${year})` : `${title}`,
+          //FIXME: Very convoluted?
+          subtitle: publicationType.concat(': ', 
             typeof author0person !== 'undefined' ? 
                 author0person.familyName.concat(' ',
                     author0person.givenNames.map(
                       (givenName:string)=>givenName[0].toUpperCase()).join(' '))
                       .concat(
-                        typeof author1person !== 'undefined'? ', et al.' : '') //TODO: Use et al. only if there are more than 2 authors
+                        typeof author1person !== 'undefined'? 
+                        (typeof author2person !== 'undefined'? ' et al.' : 
+                          ' and ' + author1person.familyName.concat(' ',
+                          author1person.givenNames.map(
+                            (givenName:string)=>givenName[0].toUpperCase()).join(' '))) : '')
                 : author0organisation),
         }
       }
@@ -62,14 +82,35 @@ export default defineType({
         description: 'A citation key is a unique identifier for this publication. It is used in the citation of the publication.',
         validation: (Rule) => Rule.required().error('The citation key of the publication is mandatory.'),
         options: {
-          source: (document: {
+          source: async (document: {
               year: number,
               title: string,
-              authors: {personName: {familyName: string}} [],
+              authors: {_key: string, _ref: string, _type: string} [],
             }) => {
             if(document.authors.length > 0) {
               //TODO: Expand the reference as shown in https://github.com/sanity-io/sanity/issues/1743
-              return `${document?.authors[0].personName}-${document?.year}-${document.title}`
+              var authorNames = new Array<string>()
+              /*document.authors.forEach(async (author) => {
+                const fetchAuthor = await client.fetch(`*[_id == "${author._ref}" && _type == "contributionAuthor"]{...}[0]`)
+                authorNames.push(fetchAuthor.personName.familyName)
+              })*/
+              for(var i = 0; i < document.authors.length; i++) {
+                var author: {_key: string, _ref: string, _type: string} = document.authors[i]
+                const fetchAuthor = await client.fetch(`*[_id == "${author._ref}" && _type == "contributionAuthor"]{...}[0]`)
+                authorNames.push(fetchAuthor.personName.familyName)
+              }
+              var concatenatedAuthorNames
+              //FIXME: Fetch the authors above only if necessary
+              if(document.authors.length > 2) {
+                concatenatedAuthorNames = authorNames[0].concat('etal')
+              }
+              else if(document.authors.length == 2) {
+                concatenatedAuthorNames = authorNames[0].concat(authorNames[1])
+              }
+              else {
+                concatenatedAuthorNames = authorNames[0]
+              }
+              return `${document.year}-${concatenatedAuthorNames}-${document.title}`
             }
             else {
               return `${document?.year}-${document.title}`
