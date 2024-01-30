@@ -88,27 +88,21 @@ export default defineType({
               authors: {_key: string, _ref: string, _type: string} [],
             }) => {
             if(document.authors.length > 0) {
-              //TODO: Expand the reference as shown in https://github.com/sanity-io/sanity/issues/1743
-              var authorNames = new Array<string>()
-              /*document.authors.forEach(async (author) => {
-                const fetchAuthor = await client.fetch(`*[_id == "${author._ref}" && _type == "contributionAuthor"]{...}[0]`)
-                authorNames.push(fetchAuthor.personName.familyName)
-              })*/
-              for(var i = 0; i < document.authors.length; i++) {
-                var author: {_key: string, _ref: string, _type: string} = document.authors[i]
-                const fetchAuthor = await client.fetch(`*[_id == "${author._ref}" && _type == "contributionAuthor"]{...}[0]`)
-                authorNames.push(fetchAuthor.personName.familyName)
-              }
-              var concatenatedAuthorNames
-              //FIXME: Fetch the authors above only if necessary
+              //TODO: Expand the reference by fetching, see https://github.com/sanity-io/sanity/issues/1743. API call is not cached, so this is not an optimised solution.
+              var authorNames: string[] = []
+              var concatenatedAuthorNames: string
+              var author0: {_key: string, _ref: string, _type: string} = document.authors[0]
+              const fetchAuthor0 = await client.fetch(`*[_id == "${author0._ref}" && _type == "contributionAuthor"]{...}[0]`)
+              authorNames.push(fetchAuthor0.personName.familyName)
+              concatenatedAuthorNames = authorNames[0]
               if(document.authors.length > 2) {
-                concatenatedAuthorNames = authorNames[0].concat('etal')
+                concatenatedAuthorNames = concatenatedAuthorNames.concat('-etal')
               }
               else if(document.authors.length == 2) {
-                concatenatedAuthorNames = authorNames[0].concat(authorNames[1])
-              }
-              else {
-                concatenatedAuthorNames = authorNames[0]
+                var author1: {_key: string, _ref: string, _type: string} = document.authors[1]
+                const fetchAuthor1 = await client.fetch(`*[_id == "${author1._ref}" && _type == "contributionAuthor"]{...}[0]`)
+                authorNames.push(fetchAuthor1.personName.familyName)
+                concatenatedAuthorNames = concatenatedAuthorNames.concat('-', authorNames[1])
               }
               return `${document.year}-${concatenatedAuthorNames}-${document.title}`
             }
